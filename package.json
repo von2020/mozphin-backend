@@ -1,0 +1,29 @@
+{
+  "name": "mozphin-backend",
+  "version": "1.0.0",
+  "description": "banking app admin portal",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "softworks",
+  "license": "ISC",
+  "dependencies": {
+    "crypto-js": "^4.1.1",
+    "dotenv": "^16.0.1",
+    "express": "^4.18.1",
+    "express-fileupload": "^1.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.5.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.7",
+    "nodemon": "^2.0.19",
+    "randomstring": "^1.2.2",
+    "sequelize": "^6.21.3"
+  },
+  "engines": {
+    "node": "16.14.0"
+  }
+}
