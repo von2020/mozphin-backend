@@ -4,7 +4,7 @@ const mysql = require("mysql2");
 const mysqlConnection = require("./connection");
 const {Sequelize, DataTypes} = require('sequelize');
 const dotenv = require("dotenv");
-// const userRoute =  require("./routes/user");
+
 const authRoute =  require("./routes/auth");
 
 const nodemailer = require("nodemailer");
@@ -22,7 +22,7 @@ dotenv.config();
 
 
 app.use(express.json());
-// app.use("/api/v1/users", userRoute);
+
 app.use("/api/v1/auth", authRoute);
 
 

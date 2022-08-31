@@ -6,8 +6,11 @@ const controllers = require('../controllers')
 //const middleware = require('')
 
 //loading the module into the folder.
-const auth_routes = require('./auth_routes');
+const auth_routes = require('./auth');
+
+const bills_routes = require('./bills');
 
 router.use(auth_routes);
+// router.use('/bills', bills_routes);
 
 module.exports = router;

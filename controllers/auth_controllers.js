@@ -10,8 +10,8 @@ const  config  = require('../config/config');
 
 const transporter =  nodemailer.createTransport({
                 host:'smtp.gmail.com',
-                port:587,
-                secure:false,
+                port:465,
+                secure:true,
                 requireTLS:true,
                 pool:true,
                 maxConnections: 1,
@@ -23,61 +23,31 @@ const transporter =  nodemailer.createTransport({
 
 class auth_controllers {
 
-// 1. reset Password
-// static async sendResetPasswordMail (name, email, token) {
-//     const User = db.users 
 
-//     try{
-
-//         const transporter =  nodemailer.createTransport({
-//             host:'smtp.gmail.com',
-//             port:587,
-//             secure:false,
-//             requireTLS:true,
-//             auth:{
-//                 user:config.emailUser,
-//                 pass:config.emailPassword
-//             }
-//         });
-
-//        const mailOptions = {
-//             from:config.emailUser,
-//             to:email,
-//             subject:'For Reset Password',
-//             html:'<p> Hi '+name+', Please click on the link and<a href="http://localhost:5000/api/v1/auth/resetPassword?token'+token+'"> reset your password</a> </p>'
-//        } 
-//        transporter.sendMail(mailOptions, function(error, info){
-
-//             if(error){
-//                 console.log(error);
-//              }
-//             else{
-//                 console.log("Mail has been sent:-", info.response);
-//             }
-//        })
-
-//     }catch(error){
-//         res.status(400).send({success:false, msg:error.message})
-//     }
-    
-// }
  
 // 1. create users
 static async addUser (req, res) {
     const User = db.users 
-    console.log('password', req.body.password)
+    
+    // console.log('password', req.body.password)
     const query = {
         firstname : req.body.firstname,
         lastname : req.body.lastname,
         phone : req.body.phone,
         email : req.body.email,
-        password: CryptoJS.AES.encrypt(req.body.password, process.env.PASS_SEC).toString(),
-        
+        customerID : req.body.customerID,
+          
     }
-
-    const users = await User.create(query)
-    res.status(200).send(users)
-    console.log('users', users)
+    const email = req.body.email
+    let user = await User.findOne({ where: { email: email }})
+    if(!user){
+        const users = await User.create(query)
+        res.status(200).send(users)
+        console.log('users', users)
+    }else{
+        return res.status(200).send('User already exists.');
+    }
+    
 
     }
 
@@ -177,10 +147,11 @@ static async forgetPassword (req, res) {
 
         const email = req.body.email
         const userData = await User.findOne({ where: {email:email} });
-
+        console.log('userData', userData)
         if(userData){
             const randomString = randomstring.generate();
-            const data = await User.update({$set:{token:randomString}}, { where: {email:email} })
+            const data = await User.update({token:randomString}, { where: {email:email} })
+            console.log('data', data)
             // sendResetPasswordMail(userData.firstname, userData.email, randomString);
             // reset Password
             console.log('email', userData.email)
@@ -194,7 +165,7 @@ static async forgetPassword (req, res) {
                 from:config.emailUser,
                 to:userData.email,
                 subject:'For Reset Password',
-                html:'<p> Hi '+userData.firstname+', Please click on the link and<a href="http://localhost:5000/api/v1/auth/resetPassword?token='+randomString+'"> reset your password</a> </p>'
+                html:'<p> Hi '+userData.firstname+', Please copy token to reset password =>  ' +randomString+ '  </p>'
            } 
            console.log('mailOptions', mailOptions)
            transporter.sendMail(mailOptions, function(error, info){
@@ -219,6 +190,112 @@ static async forgetPassword (req, res) {
     }
 
     }
+
+// .7 Reset Password
+
+static async resetPassword (req, res) {
+    const User = db.users
+        try{
+            const token = req.query.token;
+            const tokenData = await User.findOne({ where: {token:token} });
+            console.log('tokenData', tokenData.dataValues)
+            console.log('token', token)
+            if(tokenData){
+                const password = req.body.password;
+                const newPassword = await  CryptoJS.AES.encrypt(
+                    password,
+                    process.env.PASS_SEC
+                ).toString();;
+                const userData = await User.update({password:newPassword, token:''}, { where: {id:tokenData.id}},{new:true})
+                res.status(200).send({success:true, msg:"User Password Reset Successfully", data:userData})
+            }else{
+                res.status(200).send({success:true, msg:"This link has expired"})
+            }
+
+        } catch(err){
+            console.log('err', err)
+            res.status(500).json(err);
+        }
+    }
+
+// 8. Update Password
+static async updatePassword (req, res) {
+    const User = db.users
+    try{
+
+        const user_id = req.body.user_id;
+        const password = req.body.password;
+
+        const data = await User.findOne({ where: {id:user_id} });
+
+        if(data){
+            const newPassword = await  CryptoJS.AES.encrypt(
+                password,
+                process.env.PASS_SEC
+            ).toString();
+            const userData = await User.update({password:newPassword}, { where: {id:user_id}})
+            res.status(200).send({success:true, msg:"User Password Created Successfully", data:userData})
+        }else{
+            res.status(200).send({ success:false, msg:"User Id not found!" });
+        }
+
+    }catch(error){
+        console.log('err', error)
+        res.status(500).json(error);
+    }
+}
+
+// 9. create Transaction PIN
+static async createTransactionPin (req, res) {
+    const User = db.users
+    try{
+
+        const user_id = req.body.user_id;
+        const transaction_pin = req.body.transaction_pin;
+
+        const data = await User.findOne({ where: {id:user_id} });
+
+        if(data){
+            
+            const userData = await User.update({transactionPIN:transaction_pin}, { where: {id:user_id}})
+            res.status(200).send({success:true, msg:"User Transaction Pin Created Successfully", data:userData})
+        }else{
+            res.status(200).send({ success:false, msg:"User Id not found!" });
+        }
+
+    }catch(error){
+        console.log('err', error)
+        res.status(500).json(error);
+    }
+}
+
+// 10. validate Transaction PIN
+static async validateTransactionPin (req, res) {
+    const User = db.users
+    try{
+
+        const user_id = req.body.user_id;
+        const transaction_pin = req.body.transaction_pin;
+
+        const data = await User.findOne({ where: {id:user_id} });
+        const userPin = data.transactionPIN
+
+        console.log('userPIN', userPin)
+
+        if(data && userPin == transaction_pin){
+            res.status(200).send({success:true, msg:"User Transaction Pin Verified Successfully"})
+        }else if(data && userPin != transaction_pin){
+            res.status(200).send({ success:false, msg:"Wrong Transaction Pin!" });
+        
+        }else{
+            res.status(200).send({ success:false, msg:"User Id not found!" });
+        }
+
+    }catch(error){
+        console.log('err', error)
+        res.status(500).json(error);
+    }
+}
 
 }
 
