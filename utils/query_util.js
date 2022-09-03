@@ -1,5 +1,5 @@
 // loading the baseUrl
-const { baseUrl } = require('../baseUrl')
+const { baseUrl, token, signature } = require('../baseUrl')
 
 // require the request module
 const request = require('request');
@@ -19,6 +19,7 @@ class Consumers {
         const options = {
           headers: {
             'content-Type': 'application/json',
+            
           },
           url: `${baseUrl}${url}`,
           body,
@@ -37,17 +38,21 @@ static getResponse_get(url) {
       const options = {
         headers: {
           'content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          
         },
         url: `${baseUrl}${url}`
       };
       console.log('options', options)
       request.get(options, (error, result, resBody) => {
+        console.log('error', error)
+        console.log('result', result.statusCode)
         if (error) reject(error);
         if (result.statusCode == '500') {
           throw new Error('ERROR 500: Internal server error')
         } else {
-          console.log('result', result)
-          var resbody = JSON.parse(result);
+          console.log('result', result.body)
+          var resbody = JSON.parse(result.body);
           resolve({result, resbody})
         }
       });
@@ -190,18 +195,26 @@ static putResponseparam(query, url) {
 });
 };
 
-static postResponse(query, url) {
+static postResponse(query,signature, url) {
   return new Promise ( (resolve, reject) => {
+
+    
   
       const body = JSON.stringify(query);
       const options = {
         headers: {
           'content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'Signature': signature,
         },
         url: `${baseUrl}${url}`,
         body,
       };
+      console.log('options', options)
       request.post(options, (error, result, resBody) => {
+        console.log('error', error)
+        console.log('result', result.statusCode)
+        console.log('body', result.body)
         if (error) reject(error);
         var resbody = JSON.parse(result.body);
         resolve({result, resbody})

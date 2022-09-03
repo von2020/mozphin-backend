@@ -8,10 +8,14 @@ const  config  = require('../config/config');
 
 const {
     allServices,
+    billPin,
+    encryptBillPin,
     dataSubscribe,
     airtimeSubscribe,
+    validatePhcnSub,
     phcnSubscribe,
-    cableSubscribe
+    cableSubscribe,
+    validateCableSub
 } = bill_queries;
 
 
@@ -64,6 +68,78 @@ static async dataSub (req, res) {
 
     }
 
+    static async createTransactionPinBill (req, res) {
+        const query = {
+            pin : req.body.pin,
+            confirm_pin : req.body.confirm_pin,
+            
+        }
+
+        const signature = process.env.SIGNATURE
+        console.log('signature', signature)
+        
+        console.log('The query:', query)
+            try {
+                const { result, resbody } = await billPin(query, signature);
+                const data = resbody
+                console.log('data:', data)
+    
+                res.status(200).send(data)
+                
+            } catch (err) {
+                if (err) console.log('error', err)
+                return res.status(200).send("error:", err);
+            }
+    }
+
+    static async encryptTransactionPinBill (req, res) {
+        const query = {
+            pin : req.body.pin,
+            password : req.body.password,
+            
+        }
+
+        const signature = process.env.SIGNATURE
+        console.log('signature', signature)
+        
+        console.log('The query:', query)
+            try {
+                const { result, resbody } = await encryptBillPin(query, signature);
+                const data = resbody
+                console.log('data:', data)
+    
+                res.status(200).send(data)
+                
+            } catch (err) {
+                if (err) console.log('error', err)
+                return res.status(200).send("error:", err);
+            }
+    }
+
+    static async validateCableSub (req, res) {
+        const query = {
+            service_id : req.body.service_id,
+            decoder_number : req.body.decoder_number,
+            
+        }
+
+        const signature = process.env.SIGNATURE
+        console.log('signature', signature)
+        
+        console.log('The query:', query)
+            try {
+                const { result, resbody } = await validateCableSub(query, signature);
+                const data = resbody
+                console.log('data:', data)
+    
+                res.status(200).send(data)
+                
+            } catch (err) {
+                if (err) console.log('error', err)
+                return res.status(200).send("error:", err);
+            }
+    }
+
 
 // 3. cable subscription
 static async cableSub (req, res) {
@@ -77,9 +153,12 @@ static async cableSub (req, res) {
         mode : req.body.mode,
     }
     
+    const signature = process.env.SIGNATURE
+    console.log('signature', signature)
+
     console.log('The query:', query)
         try {
-            const { result, resbody } = await airtimeSubscribe();
+            const { result, resbody } = await airtimeSubscribe(query, signature);
             const data = resbody
             console.log('data:', data)
 
@@ -120,6 +199,31 @@ static async airtimeSub (req, res) {
         }
     
 
+    }
+
+    static async validatePhcnSub (req, res) {
+        const query = {
+            service_id : req.body.service_id,
+            meter_number : req.body.meter_number,
+            meter_type : req.body.meter_type
+            
+        }
+
+        const signature = process.env.SIGNATURE
+        console.log('signature', signature)
+        
+        console.log('The query:', query)
+            try {
+                const { result, resbody } = await validatePhcnSub(query, signature);
+                const data = resbody
+                console.log('data:', data)
+    
+                res.status(200).send(data)
+                
+            } catch (err) {
+                if (err) console.log('error', err)
+                return res.status(200).send("error:", err);
+            }
     }
 
     // 4. phcn subscription

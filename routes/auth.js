@@ -3,6 +3,7 @@ const router = express.Router();
 const CryptoJS = require("crypto-js");
 const jwt = require("jsonwebtoken");
 
+const {authorize} = require('../middlewares/authorization')
 
 const { bill_controllers} = require('../controllers/index');
 
@@ -25,9 +26,13 @@ const {
 const {
     allServices,
     dataSub,
+    validateCableSub,
     cableSub,
     airtimeSub,
+    validatePhcnSub,
     phcnSub,
+    createTransactionPinBill,
+    encryptTransactionPinBill,
     
 }= bill_controllers;
 
@@ -57,14 +62,23 @@ router.post("/validateTransactionPin", validateTransactionPin);
 router.get("/allServices", allServices);
 
 // DATA SUB
-router.post("/dataSub", dataSub);
+router.post("/dataSub",[ authorize ], dataSub);
 
 // CABLE
-router.post("/cableSub", cableSub);
+router.post("/validateCableSub",[ authorize ], validateCableSub);
+router.post("/cableSub",[ authorize ], cableSub);
 
 // PHCN
-router.post("/phcnSub", phcnSub);
+router.post("/validatePhcnSub",[ authorize ], validatePhcnSub);
+router.post("/phcnSub",[ authorize ], phcnSub);
 
 // AIRTIME
-router.post("/airtimeSub", airtimeSub);
+router.post("/airtimeSub",[ authorize ], airtimeSub);
+
+// BILL TRANSACTION PIN
+router.post("/createTransactionPinBill", [ authorize ], createTransactionPinBill);
+
+// ENCRYPT BILL TRANSACTION PIN
+router.post("/encryptTransactionPinBill",[ authorize ], encryptTransactionPinBill);
+
 module.exports = router

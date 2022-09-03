@@ -1,7 +1,9 @@
 const url = process.env.BaseUrl || 'https://api.dev.billerhq.com' // this is for production and live
-
-
+const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiY2RmODViMmFhZjE1Y2FhM2ZjYjcxNTZlZGFiM2NiOGRmNjllNzYyOTY2NDIzNjQ0MDMxNGQzNjg1YTQ4NWU4MzJjZmI2MjNkNWYzNTE2YjkiLCJpYXQiOjE2NjIwNDQ0MzUuMTE2MDE0LCJuYmYiOjE2NjIwNDQ0MzUuMTE2MDE4LCJleHAiOjE2Nzc2ODI4MzUuMTAzNzc1LCJzdWIiOiIzIiwic2NvcGVzIjpbXX0.GsKbq6LeJnXQshcr9s25Ezg3WJJuKJasFIlz_z65rIsFa6wjSlNzaWGkJae1Xw9DI6Kkb7HpLSFFHT_JpBIQBznSn82uBDueYDNcpkPTUqYfHOyhioWF2uN4ArtIwiJrwWR9HagGEzix4IT2wl_-Hvp6eerj04blJPBvLXy_ft7EFFhsWH9asxMAl7kXIpqJjSdeYft2yQQjVioi1udyyTsAu1oWAtH3oTirbeQVnwbwzuifmwKY6VQMRGOP1BbeI7P8ZQhy_JyOGfnzNYviqqcd0I4wtzJ_ELguqRVvok1wwdAepq0BEHSKwpXVYUKEy6l5tTdJ75camY73eyy5mc_IQhYXBoR84hd04k28pYPLItuzh_c33-lpFISGol2Nc7ePGGxwgRXjJqW7S1j3otQk1h0Br5ocdWd5x6UIqOdPnGoiUfnMxr3W0pUmtjaHjmIOwVLN7WMjXnr-UyPjCNhc64xdLrhL0Gp5Jp2koOrjTIW_4gnS6pq3ok9VhiBp0iES3Y23bw5spTSJcR-DjC3uuAER7PjhtQYN-Z9LcBhcFD4TesumnzBwoyD0F1wTkp4yjNLDdJ1unMe6vnWw-Q5CwOBO7_wf3l2ehYLgLdy0rQcK1wkn7fb7YsbjykRNmUsz_jbYpR88dhm5x3sn_eA_ojsGNUdRHv5xtDDNrkQ'
+// const signature = 'id0msOwtZU5Q5/F+7CTbL+f0Yp3/jo0PLtGWdCuWsOY='
 
 module.exports = {
-    baseUrl : `${url}/`
+    baseUrl : `${url}/`,
+    token : `${token}`,
+    // signature : `${signature}`
 }

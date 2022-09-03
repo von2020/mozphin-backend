@@ -13,7 +13,7 @@ class bill_queries {
     };
 
     static async dataSubscribe(query) {
-        const url = 'merchants/transactions/data/subscribe';
+        const url = 'api/v1/merchants/transactions/data/subscribe';
         console.log('contact', query)
         try {
             const {result, resbody} = await postResponse(query, url)
@@ -25,7 +25,7 @@ class bill_queries {
     };
 
     static async airtimeSubscribe(query) {
-        const url = 'merchants/transactions/airtime/vend';
+        const url = 'api/v1/merchants/transactions/airtime/vend';
         console.log('contact', query)
         try {
             const {result, resbody} = await postResponse(query, url)
@@ -36,11 +36,11 @@ class bill_queries {
         }
     };
 
-    static async phcnSubscribe(query) {
-        const url = 'merchants/transactions/energy/subscribe';
+    static async billPin(query, signature) {
+        const url = 'api/v1/merchants/profile/transaction-pin';
         console.log('contact', query)
         try {
-            const {result, resbody} = await postResponse(query, url)
+            const {result, resbody} = await postResponse(query,signature,url)
             return {result, resbody}
             
         }catch(err){
@@ -48,11 +48,59 @@ class bill_queries {
         }
     };
 
-    static async cableSubscribe(query) {
-        const url = 'merchants/transactions/cable/subscribe';
+    static async encryptBillPin(query, signature) {
+        const url = 'api/v1/merchants/pin/encrypt';
         console.log('contact', query)
         try {
-            const {result, resbody} = await postResponse(query, url)
+            const {result, resbody} = await postResponse(query,signature,url)
+            return {result, resbody}
+            
+        }catch(err){
+            if (err) console.log('login error', err)
+        }
+    };
+
+    static async validateCableSub(query, signature) {
+        const url = 'api/v1/merchants/transactions/cable/validate';
+        console.log('contact', query)
+        try {
+            const {result, resbody} = await postResponse(query,signature,url)
+            return {result, resbody}
+            
+        }catch(err){
+            if (err) console.log('login error', err)
+        }
+    };
+
+    static async validatePhcnSub(query, signature) {
+        const url = 'api/v1/merchants/transactions/energy/validate';
+        console.log('contact', query)
+        try {
+            const {result, resbody} = await postResponse(query,signature,url)
+            return {result, resbody}
+            
+        }catch(err){
+            if (err) console.log('login error', err)
+        }
+    };
+
+    static async phcnSubscribe(query, signature) {
+        const url = 'api/v1/merchants/transactions/energy/subscribe';
+        console.log('contact', query)
+        try {
+            const {result, resbody} = await postResponse(query,signature, url)
+            return {result, resbody}
+            
+        }catch(err){
+            if (err) console.log('login error', err)
+        }
+    };
+
+    static async cableSubscribe(query, signature) {
+        const url = 'api/v1/merchants/transactions/cable/subscribe';
+        console.log('contact', query)
+        try {
+            const {result, resbody} = await postResponse(query,signature,url)
             return {result, resbody}
             
         }catch(err){
