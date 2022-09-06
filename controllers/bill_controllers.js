@@ -158,7 +158,7 @@ static async cableSub (req, res) {
 
     console.log('The query:', query)
         try {
-            const { result, resbody } = await airtimeSubscribe(query, signature);
+            const { result, resbody } = await cableSubscribe(query, signature);
             const data = resbody
             console.log('data:', data)
 
@@ -184,10 +184,13 @@ static async airtimeSub (req, res) {
         reference : req.body.reference,
         mode : req.body.mode,
     }
+
+    const signature = process.env.SIGNATURE
+    console.log('signature', signature)
     
     console.log('The query:', query)
         try {
-            const { result, resbody } = await cableSubscribe();
+            const { result, resbody } = await airtimeSubscribe(query, signature);
             const data = resbody
             console.log('data:', data)
 
@@ -239,9 +242,11 @@ static async phcnSub (req, res) {
         mode : req.body.mode,
     }
     
+    const signature = process.env.SIGNATURE
+    console.log('signature', signature)
     console.log('The query:', query)
         try {
-            const { result, resbody } = await phcnSubscribe();
+            const { result, resbody } = await phcnSubscribe(query, signature);
             const data = resbody
             console.log('data:', data)
 
