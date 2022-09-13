@@ -214,7 +214,7 @@ static postResponse(query,signature, url) {
       request.post(options, (error, result, resBody) => {
         console.log('error', error)
         console.log('result', result.statusCode)
-        console.log('body', result.body)
+        // console.log('body', result.body)
         if (error) reject(error);
         var resbody = JSON.parse(result.body);
         resolve({result, resbody})

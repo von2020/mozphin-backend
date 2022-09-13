@@ -8,6 +8,7 @@ const  config  = require('../config/config');
 
 const {
     allServices,
+    allProducts,
     billPin,
     encryptBillPin,
     dataSubscribe,
@@ -39,6 +40,23 @@ class bill_controllers {
         }
     };
 
+    static async allProducts(req, res) {
+        const id = req.query.id;
+        console.log('id', id)
+        try {
+            const { result, resbody } = await allProducts(id);
+            var services = resbody
+            console.log('services',services)
+            res.status(200).send(services)
+            
+
+        } catch (err) {
+            if (err) console.log('error', err)
+            return res.status(200).send("error:", err);
+                    
+        }
+    };
+
  
 // 2. data subscription
 static async dataSub (req, res) {
@@ -52,11 +70,15 @@ static async dataSub (req, res) {
         mode : req.body.mode,
     }
     
-    console.log('The query:', query)
+    const signature = process.env.SIGNATURE
+        console.log('signature', signature)
+        
+        console.log('The query:', query)
+    
         try {
-            const { result, resbody } = await dataSubscribe();
+            const { result, resbody } = await dataSubscribe(query, signature);
             const data = resbody
-            console.log('data:', data)
+            // console.log('data:', data)
 
             res.status(200).send(data)
             
@@ -192,7 +214,7 @@ static async airtimeSub (req, res) {
         try {
             const { result, resbody } = await airtimeSubscribe(query, signature);
             const data = resbody
-            console.log('data:', data)
+            // console.log('data:', data)
 
             res.status(200).send(data)
             

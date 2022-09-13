@@ -258,7 +258,7 @@ static async createTransactionPin (req, res) {
         if(data){
             
             const userData = await User.update({transactionPIN:transaction_pin}, { where: {id:user_id}})
-            res.status(200).send({success:true, msg:"User Transaction Pin Created Successfully", data:userData})
+            res.status(200).send({success:true, msg:"Transaction Pin Created Successfully", data:userData})
         }else{
             res.status(200).send({ success:false, msg:"User Id not found!" });
         }
@@ -283,7 +283,7 @@ static async validateTransactionPin (req, res) {
         console.log('userPIN', userPin)
 
         if(data && userPin == transaction_pin){
-            res.status(200).send({success:true, msg:"User Transaction Pin Verified Successfully"})
+            res.status(200).send({success:true, msg:"Transaction Successful"})
         }else if(data && userPin != transaction_pin){
             res.status(200).send({ success:false, msg:"Wrong Transaction Pin!" });
         

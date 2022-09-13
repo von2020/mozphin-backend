@@ -25,6 +25,7 @@ const {
 
 const {
     allServices,
+    allProducts,
     dataSub,
     validateCableSub,
     cableSub,
@@ -60,6 +61,9 @@ router.post("/validateTransactionPin", validateTransactionPin);
 
 // SERVICES
 router.get("/allServices", allServices);
+
+// PRODUCTS
+router.get("/allProducts", allProducts);
 
 // DATA SUB
 router.post("/dataSub",[ authorize ], dataSub);

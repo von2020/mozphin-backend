@@ -12,11 +12,22 @@ class bill_queries {
         }
     };
 
-    static async dataSubscribe(query) {
+    static async allProducts(id) {
+        const url = `api/v1/services/${id}/products`;
+        try {
+            const {result, resbody} = await getResponse_get(url)
+            return {result, resbody};
+            
+        }catch(err){
+            if (err) console.log('login error', err)
+        }
+    };
+
+    static async dataSubscribe(query, signature) {
         const url = 'api/v1/merchants/transactions/data/subscribe';
         console.log('contact', query)
         try {
-            const {result, resbody} = await postResponse(query, url)
+            const {result, resbody} = await postResponse(query,signature, url)
             return {result, resbody}
             
         }catch(err){
@@ -24,11 +35,11 @@ class bill_queries {
         }
     };
 
-    static async airtimeSubscribe(query) {
+    static async airtimeSubscribe(query, signature) {
         const url = 'api/v1/merchants/transactions/airtime/vend';
         console.log('contact', query)
         try {
-            const {result, resbody} = await postResponse(query, url)
+            const {result, resbody} = await postResponse(query,signature, url)
             return {result, resbody}
             
         }catch(err){
